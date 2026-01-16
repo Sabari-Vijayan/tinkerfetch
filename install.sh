@@ -1,35 +1,34 @@
 #!/bin/bash
 
-# 1. Check if fastfetch is installed
-if ! command -v fastfetch &> /dev/null; then
-    echo "❌ Error: 'fastfetch' is not installed."
-    echo "Please install it first (e.g., 'sudo apt install fastfetch' or 'brew install fastfetch')."
-    exit 1
+# Configuration
+REPO_NAME="tinkerfetch"
+TARGET_DIR="$HOME/.config/$REPO_NAME"
+BIN_DIR="$HOME/.local/bin"
+SHELL_RC="$HOME/.bashrc"
+# Check for Zsh if Bash isn't the primary
+[[ $SHELL == *"zsh"* ]] && SHELL_RC="$HOME/.zshrc"
+
+echo -e "\e[32m[1/3]\e[0m Creating directories at $TARGET_DIR..."
+mkdir -p "$TARGET_DIR"
+mkdir -p "$BIN_DIR"
+
+echo -e "\e[32m[2/3]\e[0m Installing files..."
+# Copy all assets to the config folder
+cp config.jsonc events.jsonc logo.txt tinkerfetch "$TARGET_DIR/"
+chmod +x "$TARGET_DIR/tinkerfetch"
+
+# Create a symbolic link in the local bin
+ln -sf "$TARGET_DIR/tinkerfetch" "$BIN_DIR/tinkerfetch"
+
+echo -e "\e[32m[3/3]\e[0m Updating shell PATH..."
+# Only add to PATH if it's not already there to prevent duplication
+if [[ ":$PATH:" != *":$BIN_DIR:"* ]]; then
+    if ! grep -q "$BIN_DIR" "$SHELL_RC"; then
+        echo -e "\n# $REPO_NAME path\nexport PATH=\"\$PATH:$BIN_DIR\"" >> "$SHELL_RC"
+        echo "Added $BIN_DIR to $SHELL_RC"
+    fi
 fi
 
-# 2. Create the directory
-mkdir -p ~/.config/tinkerfetch
-
-# 3. Download the files (Using the RAW github domain)
-BASE_URL="https://raw.githubusercontent.com/Sabari-Vijayan/tinkerfetch/main"
-
-echo "Downloading configuration..."
-curl -sL "$BASE_URL/config.jsonc" -o ~/.config/tinkerfetch/config.jsonc
-curl -sL "$BASE_URL/logo.txt" -o ~/.config/tinkerfetch/logo.txt
-
-# 4. Add the alias to .bashrc or .zshrc
-# using a variable for the alias to keep it clean
-TF_ALIAS="alias tinkerfetch='fastfetch --config ~/.config/tinkerfetch/config.jsonc'"
-
-if [ -f ~/.bashrc ] && ! grep -q "alias tinkerfetch=" ~/.bashrc; then
-    echo "$TF_ALIAS" >> ~/.bashrc
-    echo "Added alias to .bashrc"
-fi
-
-if [ -f ~/.zshrc ] && ! grep -q "alias tinkerfetch=" ~/.zshrc; then
-    echo "$TF_ALIAS" >> ~/.zshrc
-    echo "Added alias to .zshrc"
-fi
-
-echo "✅ Tinkerfetch installed successfully!"
-echo "Restart your terminal or run 'source ~/.bashrc' (or ~/.zshrc) and type 'tinkerfetch'."
+echo -e "\n\e[32m✅ Installation Complete!\e[0m"
+echo -e "Please run: \e[33msource $(basename "$SHELL_RC")\e[0m"
+echo -e "Then try: \e[36mtinkerfetch --events\e[0m"

@@ -2,3 +2,5 @@
 
 config.jsonc.bak
 commands.txt
+./backup
+./local_install.sh
