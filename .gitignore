@@ -1,3 +1,6 @@
 #Ignoring the backup file
 
 config.jsonc.bak
+commands.txt
+./backup
+./local_install.sh
