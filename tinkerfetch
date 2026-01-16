@@ -1,0 +1,17 @@
+#!/bin/bash
+CONF_DIR="$HOME/.config/tinkerfetch"
+if [[ "$1" == "--events" ]]; then
+    echo -e "\e[38;5;213mFetching latest TinkerHub events...\e[0m"
+    # Fetch and format directly to events.txt
+    curl -s --max-time 5 'https://tinkerhub.org/events' | \
+    perl -ne 'print $1 if /id="__NUXT_DATA__">(.*?)<\/script>/' | \
+    jq -r '. as $root | def r(i): if (i|type) == "number" then $root[i] else i end;
+        [ .[] | select(type == "object" and .name != null and .startDate != null) | {n: r(.name), d: r(.startDate)} ] |
+        sort_by(.d) | .[:3][] | .n as $name | .d[:10] as $date |
+        "\u001b[38;5;213m║\u001b[38;5;255m ▸ " + ($name[:31] | . + " " * (31 - length)) + "(\u001b[38;5;243m" + $date + "\u001b[38;5;255m) \u001b[38;5;213m║"' > "$CONF_DIR/events.txt"
+    # Launch the event view
+    fastfetch --config "$CONF_DIR/events.jsonc"
+else
+    # Launch the standard system view
+    fastfetch --config "$CONF_DIR/config.jsonc"
+fi
