@@ -1,6 +1,8 @@
 #!/bin/bash
 CONF_DIR="$HOME/.config/tinkerfetch"
 
+mkdir -p "$CONF_DIR"
+
 if [[ "$1" == "--events" ]]; then
     echo -e "\e[38;5;213mFetching latest TinkerHub events...\e[0m"
     
