@@ -10,7 +10,7 @@ if [[ "$1" == "--events" ]]; then
     perl -ne 'print $1 if /id="__NUXT_DATA__">(.*?)<\/script>/' | \
     jq -r '. as $root | def r(i): if (i|type) == "number" then $root[i] else i end; 
         [ .[] | select(type == "object" and .name != null and .startDate != null) | {n: r(.name), d: r(.startDate)} ] | 
-        sort_by(.d) | .[:6] | to_entries[] | 
+        sort_by(.d) | reverse | .[:6] | to_entries[] | 
         .key as $idx | .value.n as $name | .value.d[:10] as $date | 
         if $idx == 0 then
             # First event: 2 spaces Left
