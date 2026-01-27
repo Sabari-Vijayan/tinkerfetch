@@ -61,6 +61,28 @@ tinkerfetch
 tinkerfetch --events
 ```
 
+### 4. Uninstallation
+
+To remove Tinkerfetch from your system:
+
+```bash
+# Remove configuration and main files
+rm -rf ~/.config/tinkerfetch
+
+# Remove the executable command
+rm ~/.local/bin/tinkerfetch
+```
+
+*(Optional cleanup: You can manually remove the `~/.local/bin` path from your `.bashrc` or `.zshrc` if you added it specifically for this tool, though leaving it is harmless.)*
+
+### 📂 Storage Location
+
+The tool is stored in the following locations:
+
+*   **Source & Config:** `~/.config/tinkerfetch/`
+    *   Includes: `tinkerfetch` (script), `config.jsonc`, `events.jsonc`, `logo.txt`
+*   **Executable:** `~/.local/bin/tinkerfetch` (A symbolic link to the script above)
+
 ---
 
 ## 📂 Project Structure
