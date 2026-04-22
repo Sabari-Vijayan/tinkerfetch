@@ -3,6 +3,7 @@
 **Tinkerfetch** is a terminal-based "TinkerHub" themed system information tool. It's a custom-designed "skin" for the [Fastfetch](https://github.com/fastfetch-cli/fastfetch) engine, featuring a dedicated mode to track upcoming community events.
 
 ![tinkerfetch dashboard](./screenshots/screenshot.png)
+![tinkerfetch events fetching](./screenshots/screenshot-2026-04-22_21-16-17.png)
 
 ---
 
